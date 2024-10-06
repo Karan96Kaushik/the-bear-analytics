@@ -1,2 +1,1 @@
-# Stock-Analysis
-# the-bear-analytics
+# The Bear Analytics
