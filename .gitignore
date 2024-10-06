@@ -1,0 +1,9 @@
+*4e6f4f.json
+wh_urls.py
+
+__pycache__/
+
+node_modules/
+package-lock.json
+
+slack_chatbot_node/kite/traderState.json
