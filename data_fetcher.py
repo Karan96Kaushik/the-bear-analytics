@@ -69,7 +69,7 @@ def get_df_from_yahoo(sym, days=70, interval='1d'):
         
         today = datetime.today()
         period1_date = today - timedelta(days=days)
-        period2_date = today
+        period2_date = today + timedelta(days=1)
         
         period1 = int(period1_date.timestamp())
         period2 = int(period2_date.timestamp())
