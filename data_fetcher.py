@@ -99,7 +99,7 @@ def get_df_from_yahoo(sym, days=70, interval='1d'):
         if response.status_code == 200:
             data = response.json()
             result = data['chart']['result'][0]
-            print(result)
+            # print(result)
             timestamps = result['timestamp']
             indicators = result['indicators']['quote'][0]
             
