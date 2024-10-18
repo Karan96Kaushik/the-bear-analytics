@@ -20,7 +20,7 @@ def main():
     sym_list_csv = []
     update_data = []
 
-    print(data)
+    # print(data)
 
     for sym in row_headers:
         if len(sym) < 1:
