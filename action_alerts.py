@@ -42,12 +42,14 @@ def main():
             _, c_sl = get_stock_loc(sym, 'Stop Loss', row_headers, col_headers)
             _, c_status = get_stock_loc(sym, 'STATUS', row_headers, col_headers)
             c_target = c_sl + 1
+            c_quantity = c_sl - 2
 
-            if len(row[c_sl]) < 1 or len(row[c_target]) < 1:
+            if len(row[c_sl]) < 1 or len(row[c_target]) < 1 or len(row[c_quantity]) < 1:
                 raise Exception('No SL or Target')
 
             sl = float(row[c_sl])
             target = float(row[c_target])
+            quantity = int(row[c_quantity])
 
             status = '' #row[c_status]
             if (len(row) > c_status):
@@ -57,23 +59,32 @@ def main():
             low = float(row_json['low'])
             high = float(row_json['high'])
 
-            if (low <= sl and len(status) == 0):
-                print('SL Hit', sym)
-                block_data_sl.append({
-                    'sym': sym,
-                    'point': sl,
-                    'price': low,
-                })
-
-            print(status)
-
-            if (high >= target and len(status) == 0):
-                print('Target Hit', sym)
-                block_data_target.append({
-                    'sym': sym,
-                    'point': target,
-                    'price': high,
-                })
+            if (quantity > 0):
+                if (low <= sl and len(status) == 0):
+                    block_data_sl.append({
+                        'sym': sym,
+                        'point': sl,
+                        'price': low,
+                    })
+                if (high >= target and len(status) == 0):
+                    block_data_target.append({
+                        'sym': sym,
+                        'point': target,
+                        'price': high,
+                    })
+            else:
+                if (high >= sl and len(status) == 0):
+                    block_data_sl.append({
+                        'sym': sym,
+                        'point': sl,
+                        'price': high,
+                    })
+                if (low <= target and len(status) == 0):
+                    block_data_target.append({
+                        'sym': sym,
+                        'point': target,
+                        'price': low,
+                    })
         except Exception as e:
             send_text_to_slack(webhook_error_url, sym + ' - data action alerts error - ' + str(e))
 
