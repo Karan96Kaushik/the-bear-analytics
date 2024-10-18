@@ -16,8 +16,8 @@ def main():
     col_headers = np.array(data[0]).flatten()
     # col_headers_2 = np.array(data[1]).flatten()
 
-    print(row_headers)
-    print(col_headers)
+    # print(row_headers)
+    # print(col_headers)
     # print(col_headers_2)
 
     # return
@@ -43,9 +43,11 @@ def main():
             _, c_status = get_stock_loc(sym, 'STATUS', row_headers, col_headers)
             c_target = c_sl + 1
 
+            if len(row[c_sl]) < 1 or len(row[c_target]) < 1:
+                raise Exception('No SL or Target')
+
             sl = float(row[c_sl])
             target = float(row[c_target])
-            print(c_status, len(row))
 
             status = '' #row[c_status]
             if (len(row) > c_status):
@@ -72,10 +74,8 @@ def main():
                     'point': target,
                     'price': high,
                 })
-
         except Exception as e:
             send_text_to_slack(webhook_error_url, sym + ' - data action alerts error - ' + str(e))
-            return None
 
 
     if (len(block_data_target) > 0 or len(block_data_sl) > 0) and SEND_NOTIF:
