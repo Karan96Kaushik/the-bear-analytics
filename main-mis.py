@@ -20,14 +20,14 @@ def main():
     sym_list_csv = []
     update_data = []
 
-    # print(data)
+    
 
     for sym in row_headers:
         if len(sym) < 1:
             continue
 
         df1 = get_df_from_yahoo(sym, days=15, interval='15m')
-        # print(df1)
+        
         if df1 is None:
             continue
         
@@ -53,11 +53,11 @@ def main():
 
         downward = False
         e = analyse_data_past_candle(df1, sym, tolerance=0.005)
-        print(e)
+
 
         if e is None:
             e = analyse_data_past_candle_downward(df1, sym, tolerance=0.005)
-            print(e)
+
             downward = True
 
         if e is not None:
