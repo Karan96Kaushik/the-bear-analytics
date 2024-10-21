@@ -111,3 +111,44 @@ def get_df_from_yahoo(sym, days=70, interval='1d'):
     except Exception as e:
         send_text_to_slack(webhook_error_url, sym + ' - data api error - ' + str(e))
         return None
+
+def get_day_ohlc(sec_id, duration="5d", delay=True, delay_by=15):
+    url = 'https://openweb-ticks.dhan.co/getDayOHLC'
+    
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:131.0) Gecko/20100101 Firefox/131.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': 'https://dhan.co/',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Origin': 'https://dhan.co',
+        'Connection': 'keep-alive',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'Priority': 'u=4'
+    }
+    
+    data = {
+        "EXCH": "NSE",
+        "SEG": "E",
+        "INST": "EQUITY",
+        "SEC_ID": sec_id,
+        "DURATION": duration,
+        "Delay": delay,
+        "Delayby": delay_by
+    }
+    
+    response = requests.post(url, headers=headers, json=data)
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to retrieve data: {response.status_code}")
+        return None
+
+# Example usage:
+# ohlc_data = get_day_ohlc(4963)
+# if ohlc_data:
+#     print(ohlc_data)

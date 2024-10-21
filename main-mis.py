@@ -1,6 +1,6 @@
 import pandas as pd
 from data_fetcher import get_df_from_yahoo
-from data_analyzer import analyse_data, analyse_data_downward
+from data_analyzer_mins import analyse_data, analyse_data_downward
 from sheet_operations import read_sheet_data, bulk_update_cells, get_stock_loc, number_to_excel_column
 from slack_notifier import send_to_slack, send_text_to_slack, concise_json_to_slack_blocks
 import numpy as np
@@ -26,7 +26,8 @@ def main():
         if len(sym) < 1:
             continue
 
-        df1 = get_df_from_yahoo(sym, days=5, interval='15m')
+        df1 = get_df_from_yahoo(sym, days=15, interval='15m')
+        # print(df1)
         if df1 is None:
             continue
         
@@ -52,13 +53,14 @@ def main():
 
         downward = False
         e = analyse_data(df1, sym, tolerance=0.005)
+        print(e)
 
         if e is None:
             e = analyse_data_downward(df1, sym, tolerance=0.005)
+            print(e)
             downward = True
 
         if e is not None:
-            print(sym)
             row_json = e.iloc[-1].to_dict()
             # row_json['sym'] = sym + (' - 📉 ' if downward else ' - 📈 ')
             row_json['sym'] = sym
@@ -67,8 +69,8 @@ def main():
             row_json_prev = e.iloc[-2].to_dict()
             row_json['prev'] = row_json_prev
 
-            if row_json['volume'] < 100000:
-                continue
+            # if row_json['volume'] < 100000:
+            #     continue
 
             block_data.append(row_json)
             sym_list_csv.append(sym)
