@@ -2,7 +2,7 @@ import pandas as pd
 from slack_notifier import send_text_to_slack
 from wh_urls import webhook_url, webhook_error_url, webhook_details_url 
 
-def analyse_data(df, sym, tolerance=0.01):
+def analyse_data_past_candle(df, sym, tolerance=0.01):
     try:
         df['44_day_ma'] = df['close'].rolling(window=44).mean()
         df['7_vol_ma'] = df['volume'].rolling(window=7).mean()
@@ -35,7 +35,7 @@ def analyse_data(df, sym, tolerance=0.01):
         print(e, sym)
         return None
 
-def analyse_data_downward(df, sym, tolerance=0.01):
+def analyse_data_past_candle_downward(df, sym, tolerance=0.01):
     try:
 
         df['44_day_ma'] = df['close'].rolling(window=44).mean()

@@ -1,6 +1,6 @@
 import pandas as pd
 from data_fetcher import get_df_from_yahoo
-from data_analyzer_mins import analyse_data, analyse_data_downward
+from data_analyzer_mins import analyse_data_past_candle, analyse_data_past_candle_downward
 from sheet_operations import read_sheet_data, bulk_update_cells, get_stock_loc, number_to_excel_column
 from slack_notifier import send_to_slack, send_text_to_slack, concise_json_to_slack_blocks
 import numpy as np
@@ -52,11 +52,11 @@ def main():
         })
 
         downward = False
-        e = analyse_data(df1, sym, tolerance=0.005)
+        e = analyse_data_past_candle(df1, sym, tolerance=0.005)
         print(e)
 
         if e is None:
-            e = analyse_data_downward(df1, sym, tolerance=0.005)
+            e = analyse_data_past_candle_downward(df1, sym, tolerance=0.005)
             print(e)
             downward = True
 
