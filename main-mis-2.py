@@ -54,7 +54,7 @@ def scan_intraday_stocks(stock_list):
             if not is_rising:
                 continue
             
-            first_candle = df.iloc[-1]
+            first_candle = df.iloc[-2]
             ma_value = first_candle['44_day_ma']
             
             conditions_met = check_candle_conditions(first_candle, ma_value) if is_rising == "UP" else check_reverse_candle_conditions(first_candle, ma_value)
