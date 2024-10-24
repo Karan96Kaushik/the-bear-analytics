@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from data_fetcher import get_df_from_yahoo
 from slack_notifier import send_to_slack, send_text_to_slack, concise_json_to_slack_blocks, candle_json_to_slack_blocks
-from wh_urls import webhook_zaire_url, webhook_error_url, webhook_zaire_details_url
+from wh_urls import webhook_zaire_url, webhook_error_url
 from data_fetcher import get_dhan_nifty50_data
 from datetime import datetime, timezone
 from sheet_operations import read_sheet_data_by_range
