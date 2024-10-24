@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from slack_notifier import send_text_to_slack
 from wh_urls import webhook_url, webhook_error_url, webhook_details_url 
 
@@ -65,3 +66,47 @@ def analyse_data_past_candle_downward(df, sym, tolerance=0.01):
         send_text_to_slack(webhook_error_url, sym + ' - processing error - ' + str(e))
         print(e, sym)
         return None
+
+def identify_double_bottom(df, window=20, tolerance=0.03):
+    """
+    Identify double bottom patterns in the given DataFrame.
+    
+    :param df: DataFrame with 'low' prices
+    :param window: Number of periods to look for the pattern
+    :param tolerance: Tolerance for price difference between two bottoms
+    :return: DataFrame with potential double bottom patterns
+    """
+    # ... existing code ...
+
+    def find_local_minima(series, window):
+        return series == series.rolling(window=window, center=True).min()
+
+    df['is_local_min'] = find_local_minima(df['low'], window)
+    
+    potential_patterns = []
+    
+    for i in range(len(df) - window):
+        window_df = df.iloc[i:i+window]
+        local_mins = window_df[window_df['is_local_min']]
+        
+        if len(local_mins) >= 2:
+            first_bottom = local_mins.iloc[0]
+            second_bottom = local_mins.iloc[-1]
+            
+            price_diff = abs(first_bottom['low'] - second_bottom['low']) / first_bottom['low']
+            
+            if price_diff <= tolerance:
+                peak_between = window_df.loc[first_bottom.name:second_bottom.name, 'high'].max()
+                
+                if peak_between > first_bottom['low'] and peak_between > second_bottom['low']:
+                    potential_patterns.append({
+                        'start_date': first_bottom.name,
+                        'end_date': second_bottom.name,
+                        'first_bottom': first_bottom['low'],
+                        'second_bottom': second_bottom['low'],
+                        'peak_between': peak_between
+                    })
+    
+    return pd.DataFrame(potential_patterns)
+
+# ... rest of the existing code ...

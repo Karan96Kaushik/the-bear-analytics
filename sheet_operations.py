@@ -15,6 +15,10 @@ def read_sheet_data():
     result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=READ_RANGE).execute()
     return result.get('values', [])
 
+def read_sheet_data_by_range(range):
+    result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=range).execute()
+    return result.get('values', [])
+
 def read_target_sheet_data():
     result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=READ_RANGE_TARGET).execute()
     return result.get('values', [])

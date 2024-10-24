@@ -83,6 +83,47 @@ def target_json_to_slack_blocks(text, json_data):
     
     return blocks
 
+def candle_json_to_slack_blocks(text, json_data):
+    blocks = []
+    
+    blocks.append({
+        "type": "header",
+        "text": {
+            "type": "plain_text",
+            "text": text,
+            "emoji": True
+        }
+    })
+    
+    blocks.append({
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": f"*SYM | Open | Close | High | Low | MA | Volume*"
+        }
+    })
+
+    for entry in json_data:
+        sym = entry.get("sym", "Unknown")
+        open_price = entry.get("open", "N/A")
+        close_price = entry.get("close", "N/A")
+        high = entry.get("high", "N/A")
+        low = entry.get("low", "N/A")
+        ma = entry.get("44_day_ma", "N/A")
+        volume = entry.get("volume", "N/A")
+
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*{sym}* | {round(open_price, 2)} | {round(close_price, 2)} | {round(high, 2)} | {round(low, 2)} | {round(ma, 2)} | {round(volume, 2)}"
+            }
+        })
+
+    blocks.append({"type": "divider"})
+    
+    return blocks
+
 def send_to_slack(webhook_url, blocks):
     data = {"blocks": blocks}
     response = requests.post(webhook_url, json=data)
