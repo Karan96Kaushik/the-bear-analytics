@@ -15,13 +15,16 @@ def main():
     block_data_down = []
     sym_list_csv_down = []
 
+    print('Starting...')
 
     for pg in range(PAGES):
         df_syms = get_sym_df(pgno=pg)
+        print(f'Processing page {pg}...')
         for index, row in df_syms.iterrows():
             sym = row['Sym']
 
             df1 = get_df_from_yahoo(sym)
+            print(f'Processing symbol {sym}...')
 
             if df1 is None:
                 continue
@@ -102,7 +105,9 @@ def main():
 
                     send_to_slack(webhook_wide_details_url, blocks)
         # send_text_to_slack(webhook_url, ':mega:  Alert - Mega List  ' + row_json['date_string'] + '  :rotating_light: \n' + '\n'.join(sym_list_csv))
-
+    else:
+        print('No data to send')
+        send_text_to_slack(webhook_url, 'No data to send')
 
 if __name__ == "__main__":
     main()
